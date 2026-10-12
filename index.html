@@ -216,6 +216,23 @@
         transform: translate(var(--target-x), var(--target-y)) scale(var(--final-scale)) rotate(var(--target-r));
       }
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      .bf-transition-item, .envelope-container, .wax-seal { animation: none !important; transition: none !important; }
+      .bf-wing { animation: none !important; }
+    }
+
+    /* Smaller device tweaks */
+    @media (max-width: 480px) {
+      .envelope-container { height: clamp(220px, 52vw, 280px); }
+      .mail-title { margin-bottom: 6px; }
+      .instruction { margin-top: 14px; }
+    }
+
+    /* Ensure enough vertical space when content grows */
+    @media (max-height: 500px) {
+      body { justify-content: flex-start; padding-top: 18px; padding-bottom: 40px; }
+    }
   </style>
 </head>
 <body>
