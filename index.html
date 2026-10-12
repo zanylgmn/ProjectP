@@ -14,6 +14,8 @@
       padding: 0;
     }
 
+    html, body { height: 100%; }
+
     body {
       min-height: 100vh;
       display: flex;
@@ -30,29 +32,30 @@
         transparent 100px
       );
       padding: 20px;
-      overflow: hidden;
+      overflow-x: hidden; /* allow vertical scroll on small devices */
       user-select: none;
     }
 
     /* HEADER TEXT */
     .header-container {
       text-align: center;
-      margin-bottom: 25px;
+      margin-bottom: 20px;
       color: #e2d1f0;
     }
 
     .mail-title {
-      font-size: 2.8rem;
+      /* responsive title */
+      font-size: clamp(1.4rem, 4.2vw, 2.8rem);
       font-weight: 600;
       letter-spacing: 0.5px;
       color: #f3e8ff;
     }
 
-    /* ENVELOPE CONTAINER */
+    /* ENVELOPE CONTAINER (responsive) */
     .envelope-container {
       position: relative;
-      width: 520px;
-      height: 350px;
+      width: min(520px, 92vw);
+      height: clamp(220px, 46vw, 350px);
       background: linear-gradient(135deg, #42215c 0%, #2a133d 100%);
       border-radius: 14px;
       box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6), inset 0 0 15px rgba(0, 0, 0, 0.4);
@@ -60,163 +63,67 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      transition: transform 0.28s ease, box-shadow 0.28s ease;
       z-index: 10;
+      touch-action: manipulation;
     }
 
-    .envelope-container:hover {
-      transform: translateY(-4px) scale(1.02);
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
-    }
+    .envelope-container:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 25px 50px rgba(0,0,0,0.7); }
 
-    .flap-top, .flap-bottom, .flap-left, .flap-right {
-      pointer-events: none;
-    }
+    .flap-top, .flap-bottom, .flap-left, .flap-right { pointer-events: none; }
 
     .flap-top {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 190px;
+      position: absolute; top: 0; left: 0; width: 100%; height: 45%;
       background: linear-gradient(180deg, #512b70 0%, #361a4c 100%);
       clip-path: polygon(0 0, 100% 0, 50% 100%);
-      border-top-left-radius: 14px;
-      border-top-right-radius: 14px;
-      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
-      z-index: 2;
+      border-top-left-radius: 14px; border-top-right-radius: 14px;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4)); z-index: 2;
     }
 
     .flap-bottom {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 175px;
+      position: absolute; bottom: 0; left: 0; width: 100%; height: 45%;
       background: linear-gradient(0deg, #3d1c57 0%, #2a133d 100%);
       clip-path: polygon(0 100%, 100% 100%, 50% 0);
-      border-bottom-left-radius: 14px;
-      border-bottom-right-radius: 14px;
-      z-index: 1;
+      border-bottom-left-radius: 14px; border-bottom-right-radius: 14px; z-index: 1;
     }
 
-    .flap-left {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 260px;
-      height: 100%;
-      background: #34184b;
-      clip-path: polygon(0 0, 100% 50%, 0 100%);
-      border-top-left-radius: 14px;
-      border-bottom-left-radius: 14px;
-      z-index: 1;
+    /* Use percentages for side flaps so they scale */
+    .flap-left, .flap-right {
+      position: absolute; top: 0; width: 50%; height: 100%; background: linear-gradient(90deg, rgba(75,45,98,0.95), rgba(42,19,61,0.9)); z-index: 0;
     }
-
-    .flap-right {
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 260px;
-      height: 100%;
-      background: #2e1443;
-      clip-path: polygon(100% 0, 0 50%, 100% 100%);
-      border-top-right-radius: 14px;
-      border-bottom-right-radius: 14px;
-      z-index: 1;
-    }
+    .flap-left { left: 0; clip-path: polygon(0 0, 100% 50%, 0 100%); border-top-left-radius: 14px; border-bottom-left-radius: 14px; }
+    .flap-right { right: 0; clip-path: polygon(100% 0, 0 50%, 100% 100%); border-top-right-radius: 14px; border-bottom-right-radius: 14px; }
 
     .wax-seal {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 30;
-      width: 70px;
-      height: 70px;
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      z-index: 30; width: clamp(48px, 9vw, 70px); height: clamp(48px, 9vw, 70px);
       background: radial-gradient(circle at 35% 35%, #ab47bc, #6a1b9a, #4a148c);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 
-        0 6px 18px rgba(0, 0, 0, 0.6),
-        inset 0 3px 6px rgba(255, 255, 255, 0.35),
-        inset 0 -3px 6px rgba(0, 0, 0, 0.5);
-      border: 3px solid #7b1fa2;
-      transition: transform 0.2s ease;
-      cursor: pointer;
-      pointer-events: auto;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.6), inset 0 3px 6px rgba(255,255,255,0.35), inset 0 -3px 6px rgba(0,0,0,0.5);
+      border: 3px solid #7b1fa2; transition: transform 0.18s ease; cursor: pointer; pointer-events: auto;
     }
+    .wax-seal svg { width: 50%; height: 50%; fill: #f3e8ff; pointer-events: none; }
+    .envelope-container:hover .wax-seal { transform: translate(-50%, -50%) scale(1.06); }
 
-    .wax-seal svg {
-      width: 36px;
-      height: 36px;
-      fill: #f3e8ff;
-      pointer-events: none;
-    }
+    .instruction { margin-top: 20px; font-size: clamp(0.9rem, 2.8vw, 1.1rem); font-style: italic; color: #b8a7d1; }
 
-    .envelope-container:hover .wax-seal {
-      transform: translate(-50%, -50%) scale(1.08);
-    }
+    /* Butterfly overlay - covers viewport */
+    #butterfly-overlay { position: fixed; inset: 0; pointer-events: none; z-index: 9999; overflow: visible; }
 
-    .instruction {
-      margin-top: 30px;
-      font-size: 1.1rem;
-      font-style: italic;
-      color: #b8a7d1;
-    }
-
-    #butterfly-overlay {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 9999;
-      overflow: hidden;
-    }
-
-    .bf-transition-item {
-      position: absolute;
-      transform-style: preserve-3d;
-      will-change: transform, opacity;
-      animation: continuousFly 2.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-    }
-
-    .bf-3d {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transform-style: preserve-3d;
-    }
-
-    .bf-wing {
-      width: var(--wing-size);
-      height: var(--wing-size);
-      transform-origin: var(--origin);
-      animation: flapWings 0.1s ease-in-out infinite alternate;
-      filter: drop-shadow(0 0 12px var(--glow-color));
-    }
-
+    .bf-transition-item { position: absolute; transform-style: preserve-3d; will-change: transform, opacity; animation: continuousFly var(--fly-duration, 2.2s) cubic-bezier(0.25,1,0.5,1) forwards; }
+    .bf-3d { display: flex; align-items: center; justify-content: center; transform-style: preserve-3d; }
+    .bf-wing { width: var(--wing-size); height: var(--wing-size); transform-origin: var(--origin); animation: flapWings var(--flap-speed, 0.12s) ease-in-out infinite alternate; filter: drop-shadow(0 0 12px var(--glow-color)); }
     .bf-wing-left { --origin: right center; }
     .bf-wing-right { --origin: left center; }
 
-    @keyframes flapWings {
-      0% { transform: rotateY(0deg); }
-      100% { transform: rotateY(70deg); }
-    }
-
+    @keyframes flapWings { 0% { transform: rotateY(0deg); } 100% { transform: rotateY(70deg); } }
     @keyframes continuousFly {
-      0% {
-        opacity: 0;
-        transform: translate(0, 0) scale(0.1) rotate(0deg);
-      }
-      15% { opacity: 1; }
-      100% {
-        opacity: 1;
-        transform: translate(var(--target-x), var(--target-y)) scale(var(--final-scale)) rotate(var(--target-r));
-      }
+      0% { opacity: 0; transform: translate(0, 0) scale(0.08) rotate(0deg); }
+      12% { opacity: 1; }
+      100% { opacity: 1; transform: translate(var(--target-x), var(--target-y)) scale(var(--final-scale)) rotate(var(--target-r)); }
     }
 
+    /* Accessibility: reduce motion */
     @media (prefers-reduced-motion: reduce) {
       .bf-transition-item, .envelope-container, .wax-seal { animation: none !important; transition: none !important; }
       .bf-wing { animation: none !important; }
@@ -224,7 +131,7 @@
 
     /* Smaller device tweaks */
     @media (max-width: 480px) {
-      .envelope-container { height: clamp(220px, 52vw, 280px); }
+      .envelope-container { height: clamp(200px, 52vw, 280px); }
       .mail-title { margin-bottom: 6px; }
       .instruction { margin-top: 14px; }
     }
@@ -237,20 +144,20 @@
 </head>
 <body>
 
-  <div id="butterfly-overlay"></div>
+  <div id="butterfly-overlay" aria-hidden="true"></div>
 
   <div class="header-container">
     <div class="mail-title">You got a mail!</div>
   </div>
 
-  <div class="envelope-container" id="envelope">
+  <div class="envelope-container" id="envelope" role="button" aria-label="Open envelope">
     <div class="flap-top"></div>
     <div class="flap-left"></div>
     <div class="flap-right"></div>
     <div class="flap-bottom"></div>
 
-    <div class="wax-seal" id="waxSeal">
-      <svg viewBox="0 0 24 24">
+    <div class="wax-seal" id="waxSeal" role="button" aria-label="Open wax seal">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M12,2C11.5,3.5 10.5,5 9,6.5C7,4.5 4,3.5 2,5C0,6.5 0.5,10 2.5,12C0.5,14 0,17.5 2,19C4,20.5 7,19.5 9,17.5C10.5,19 11.5,20.5 12,22C12.5,20.5 13.5,19 15,17.5C17,19.5 20,20.5 22,19C24,17.5 23.5,14 21.5,12C23.5,10 24,6.5 22,5C20,3.5 17,4.5 15,6.5C13.5,5 12.5,3.5 12,2Z"/>
       </svg>
     </div>
@@ -282,68 +189,111 @@
     let isOpening = false;
 
     function triggerTransitionEffect(e) {
-      if (e) e.stopPropagation();
+      if (e) e.stopPropagation && e.stopPropagation();
       if (isOpening) return;
       isOpening = true;
 
       const overlay = document.getElementById('butterfly-overlay');
       const seal = document.getElementById('waxSeal');
       const rect = seal.getBoundingClientRect();
-
       const startX = rect.left + rect.width / 2;
       const startY = rect.top + rect.height / 2;
 
-      for (let i = 0; i < 500; i++) {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'bf-transition-item';
+      // Determine device to limit the number of butterflies on small/mobile devices
+      const isTouch = (navigator.maxTouchPoints || ('ontouchstart' in window)) > 0;
+      const isIPhone = /iPhone/.test(navigator.userAgent) && !window.MSStream;
 
-        const bf3d = document.createElement('div');
-        bf3d.className = 'bf-3d';
+      // Choose a conservative count on mobile/iPhone to avoid freezes
+      const baseCount = isIPhone ? 30 : (isTouch ? 80 : 500);
 
-        const palette = aestheticPalettes[Math.floor(Math.random() * aestheticPalettes.length)];
-        const wingSVG = createAestheticButterflySVG(palette.wing);
+      // Throttle spawn so they don't all get appended in the same frame
+      const spawnInterval = Math.max(6, Math.floor(1200 / Math.max(8, baseCount)));
 
-        const leftWing = document.createElement('div');
-        leftWing.className = 'bf-wing bf-wing-left';
-        leftWing.innerHTML = wingSVG;
+      for (let i = 0; i < baseCount; i++) {
+        setTimeout(() => {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'bf-transition-item';
 
-        const rightWing = document.createElement('div');
-        rightWing.className = 'bf-wing bf-wing-right';
-        rightWing.innerHTML = wingSVG;
-        rightWing.style.transform = 'scaleX(-1)';
+          const bf3d = document.createElement('div');
+          bf3d.className = 'bf-3d';
 
-        bf3d.appendChild(leftWing);
-        bf3d.appendChild(rightWing);
-        wrapper.appendChild(bf3d);
+          const palette = aestheticPalettes[Math.floor(Math.random() * aestheticPalettes.length)];
+          const wingSVG = createAestheticButterflySVG(palette.wing);
 
-        const wingSize = Math.random() * 45 + 25;
-        wrapper.style.setProperty('--wing-size', wingSize + 'px');
-        wrapper.style.setProperty('--glow-color', palette.glow);
+          const leftWing = document.createElement('div');
+          leftWing.className = 'bf-wing bf-wing-left';
+          leftWing.innerHTML = wingSVG;
 
-        wrapper.style.left = startX + 'px';
-        wrapper.style.top = startY + 'px';
+          const rightWing = document.createElement('div');
+          rightWing.className = 'bf-wing bf-wing-right';
+          rightWing.innerHTML = wingSVG;
+          rightWing.style.transform = 'scaleX(-1)';
 
-        const angle = Math.random() * Math.PI * 2;
-        const distance = Math.max(window.innerWidth, window.innerHeight) * 1.5 + Math.random() * 300;
+          bf3d.appendChild(leftWing);
+          bf3d.appendChild(rightWing);
+          wrapper.appendChild(bf3d);
 
-        wrapper.style.setProperty('--target-x', Math.cos(angle) * distance + 'px');
-        wrapper.style.setProperty('--target-y', Math.sin(angle) * distance + 'px');
-        wrapper.style.setProperty('--target-r', (Math.random() - 0.5) * 540 + 'deg');
-        wrapper.style.setProperty('--final-scale', (Math.random() * 1.2 + 0.9).toFixed(2));
+          // scale wing size to viewport so it looks appropriate on all devices
+          const wingSize = (Math.max(window.innerWidth, window.innerHeight) / 100) * (Math.random() * 2 + 2); // responsive px
+          wrapper.style.setProperty('--wing-size', Math.max(18, Math.round(wingSize)) + 'px');
+          wrapper.style.setProperty('--glow-color', palette.glow);
 
-        overlay.appendChild(wrapper);
+          // start position (seal center)
+          wrapper.style.left = startX + 'px';
+          wrapper.style.top = startY + 'px';
+
+          // trajectory scaled to screen size
+          const angle = Math.random() * Math.PI * 2;
+          const distance = Math.max(window.innerWidth, window.innerHeight) * (0.9 + Math.random() * 0.9);
+
+          wrapper.style.setProperty('--target-x', Math.cos(angle) * distance + 'px');
+          wrapper.style.setProperty('--target-y', Math.sin(angle) * distance + 'px');
+          wrapper.style.setProperty('--target-r', (Math.random() - 0.5) * 540 + 'deg');
+          wrapper.style.setProperty('--final-scale', (Math.random() * 1.2 + 0.9).toFixed(2));
+
+          // slightly randomize duration to keep it lively
+          const flyDuration = isIPhone ? 900 : (isTouch ? 1200 : 2200);
+          wrapper.style.setProperty('--fly-duration', flyDuration + 'ms');
+          wrapper.style.setProperty('--flap-speed', (0.08 + Math.random() * 0.12) + 's');
+
+          overlay.appendChild(wrapper);
+
+          // cleanup after animation finishes to avoid DOM bloat
+          setTimeout(() => { try { wrapper.remove(); } catch (err) {} }, flyDuration + 800);
+
+        }, i * spawnInterval);
       }
 
-      setTimeout(() => {
-        window.location.href = 'greetings.html';
-      }, 1800);
+      // Navigate after a conservative delay
+      const finalDelay = isIPhone ? 1100 : 2000;
+      setTimeout(() => { window.location.href = 'greetings.html'; }, finalDelay);
     }
 
     const envelopeEl = document.getElementById('envelope');
     const sealEl = document.getElementById('waxSeal');
 
+    // Add pointer events for better cross-device handling (keeps existing click behavior too)
+    function onPointer(e) {
+      // prevent double firing on some devices
+      e.preventDefault && e.preventDefault();
+      triggerTransitionEffect(e);
+    }
+
+    if (window.PointerEvent) {
+      sealEl.addEventListener('pointerdown', onPointer, { passive: false });
+      envelopeEl.addEventListener('pointerdown', onPointer, { passive: false });
+    }
+
+    // keep click as a fallback
     sealEl.addEventListener('click', triggerTransitionEffect);
     envelopeEl.addEventListener('click', triggerTransitionEffect);
+
+    // If the user prefers reduced motion, skip heavy animation and redirect immediately
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      sealEl.removeEventListener && sealEl.removeEventListener('pointerdown', onPointer);
+      envelopeEl.removeEventListener && envelopeEl.removeEventListener('pointerdown', onPointer);
+      sealEl.onclick = envelopeEl.onclick = function () { window.location.href = 'greetings.html'; };
+    }
   </script>
 
 </body>
