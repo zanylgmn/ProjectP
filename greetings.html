@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Surprise, Ate Pam!</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Playfair+Display:ital,wght@0,600;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #1a0b2e;
+      background-image: repeating-linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.02) 0px,
+        rgba(255, 255, 255, 0.02) 50px,
+        transparent 50px,
+        transparent 100px
+      );
+      padding: 20px;
+      user-select: none;
+      overflow: hidden;
+    }
+
+    .hero-section {
+      width: 100%;
+      max-width: 1050px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* PINANIPIS NA BORDER WRAPPER (1.5px na lang) */
+    .hero-border-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 1000px;
+      height: 620px;
+      border-radius: 30px;
+      padding: 1.5px;
+      background: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 35px 70px rgba(0, 0, 0, 0.8);
+      text-decoration: none;
+      display: block;
+      overflow: hidden;
+      transition: box-shadow 0.5s ease;
+    }
+
+    /* ANIMATED GRADIENT BORDER KAPAG HINOVER */
+    .hero-border-wrapper:hover {
+      background: linear-gradient(45deg, #ff758c, #7b2cbf, #ff7eb3, #9d4edd, #ff758c);
+      background-size: 400% 400%;
+      animation: glowingBorder 4s ease infinite;
+      box-shadow: 0 40px 90px rgba(157, 78, 221, 0.4);
+    }
+
+    @keyframes glowingBorder {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* CARD LOOB */
+    .hero-card {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 29px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background-color: #1a0b2e;
+    }
+
+    /* HIWALAY NA BACKGROUND IMAGE PARA YUNG PICTURE LANG ANG NAKABLUR AT NAG-ZOOM */
+    .hero-bg-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      filter: blur(4px);
+      transform: scale(1);
+      transition: filter 0.6s ease, transform 0.6s ease;
+      z-index: 1;
+    }
+
+    .hero-border-wrapper:hover .hero-bg-image {
+      filter: blur(0px);
+      transform: scale(1.04);
+    }
+
+    /* DARK OVERLAY SA IBABAW NG PICTURE */
+    .hero-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(26, 11, 46, 0.55);
+      z-index: 2;
+      transition: background 0.4s ease;
+    }
+
+    .hero-border-wrapper:hover .hero-overlay {
+      background: rgba(26, 11, 46, 0.4);
+    }
+
+    /* MGA TEXT AT HINT */
+    .hero-content {
+      position: relative;
+      z-index: 3;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      padding: 0 40px;
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(3.5rem, 7vw, 5.5rem);
+      font-weight: 600;
+      color: #f3e8ff;
+      text-shadow: 0 5px 30px rgba(0, 0, 0, 0.85);
+    }
+
+    .hero-subtitle {
+      font-family: 'Caveat', cursive;
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      color: #e9d5ff;
+      text-shadow: 0 3px 20px rgba(0, 0, 0, 0.85);
+    }
+
+    .subtle-click-hint {
+      position: absolute;
+      bottom: 25px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.75rem;
+      color: #d8b4fe;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      opacity: 0.4;
+      transition: opacity 0.3s ease;
+      z-index: 3;
+    }
+
+    .hero-border-wrapper:hover .subtle-click-hint {
+      opacity: 0.85;
+    }
+
+    @media (max-width: 768px) {
+      .hero-border-wrapper {
+        height: 440px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hero-section">
+    <a href="letter.html" class="hero-border-wrapper">
+      <div class="hero-card">
+        <div class="hero-bg-image" style="background-image: url('images/greetings.jpeg');"></div>
+        <div class="hero-overlay"></div>
+        
+        <div class="hero-content">
+          <h1 class="hero-title">Surprise, Ate Pam!</h1>
+          <p class="hero-subtitle">I got a little present for you hihi :p</p>
+        </div>
+        <div class="subtle-click-hint">Click anywhere to open</div>
+      </div>
+    </a>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bon Voyage!</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Playfair Display', serif;
+      background-color: #231338;
+      background-image: repeating-linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.03) 0px,
+        rgba(255, 255, 255, 0.03) 50px,
+        transparent 50px,
+        transparent 100px
+      );
+      padding: 20px;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    /* HEADER TEXT */
+    .header-container {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #e2d1f0;
+    }
+
+    .mail-title {
+      font-size: 2.8rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      color: #f3e8ff;
+    }
+
+    /* ENVELOPE CONTAINER */
+    .envelope-container {
+      position: relative;
+      width: 520px;
+      height: 350px;
+      background: linear-gradient(135deg, #42215c 0%, #2a133d 100%);
+      border-radius: 14px;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6), inset 0 0 15px rgba(0, 0, 0, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      z-index: 10;
+    }
+
+    .envelope-container:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
+    }
+
+    .flap-top, .flap-bottom, .flap-left, .flap-right {
+      pointer-events: none;
+    }
+
+    .flap-top {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 190px;
+      background: linear-gradient(180deg, #512b70 0%, #361a4c 100%);
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+      border-top-left-radius: 14px;
+      border-top-right-radius: 14px;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
+      z-index: 2;
+    }
+
+    .flap-bottom {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 175px;
+      background: linear-gradient(0deg, #3d1c57 0%, #2a133d 100%);
+      clip-path: polygon(0 100%, 100% 100%, 50% 0);
+      border-bottom-left-radius: 14px;
+      border-bottom-right-radius: 14px;
+      z-index: 1;
+    }
+
+    .flap-left {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 260px;
+      height: 100%;
+      background: #34184b;
+      clip-path: polygon(0 0, 100% 50%, 0 100%);
+      border-top-left-radius: 14px;
+      border-bottom-left-radius: 14px;
+      z-index: 1;
+    }
+
+    .flap-right {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 260px;
+      height: 100%;
+      background: #2e1443;
+      clip-path: polygon(100% 0, 0 50%, 100% 100%);
+      border-top-right-radius: 14px;
+      border-bottom-right-radius: 14px;
+      z-index: 1;
+    }
+
+    .wax-seal {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 30;
+      width: 70px;
+      height: 70px;
+      background: radial-gradient(circle at 35% 35%, #ab47bc, #6a1b9a, #4a148c);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 
+        0 6px 18px rgba(0, 0, 0, 0.6),
+        inset 0 3px 6px rgba(255, 255, 255, 0.35),
+        inset 0 -3px 6px rgba(0, 0, 0, 0.5);
+      border: 3px solid #7b1fa2;
+      transition: transform 0.2s ease;
+      cursor: pointer;
+      pointer-events: auto;
+    }
+
+    .wax-seal svg {
+      width: 36px;
+      height: 36px;
+      fill: #f3e8ff;
+      pointer-events: none;
+    }
+
+    .envelope-container:hover .wax-seal {
+      transform: translate(-50%, -50%) scale(1.08);
+    }
+
+    .instruction {
+      margin-top: 30px;
+      font-size: 1.1rem;
+      font-style: italic;
+      color: #b8a7d1;
+    }
+
+    #butterfly-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      overflow: hidden;
+    }
+
+    .bf-transition-item {
+      position: absolute;
+      transform-style: preserve-3d;
+      will-change: transform, opacity;
+      animation: continuousFly 2.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    }
+
+    .bf-3d {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform-style: preserve-3d;
+    }
+
+    .bf-wing {
+      width: var(--wing-size);
+      height: var(--wing-size);
+      transform-origin: var(--origin);
+      animation: flapWings 0.1s ease-in-out infinite alternate;
+      filter: drop-shadow(0 0 12px var(--glow-color));
+    }
+
+    .bf-wing-left { --origin: right center; }
+    .bf-wing-right { --origin: left center; }
+
+    @keyframes flapWings {
+      0% { transform: rotateY(0deg); }
+      100% { transform: rotateY(70deg); }
+    }
+
+    @keyframes continuousFly {
+      0% {
+        opacity: 0;
+        transform: translate(0, 0) scale(0.1) rotate(0deg);
+      }
+      15% { opacity: 1; }
+      100% {
+        opacity: 1;
+        transform: translate(var(--target-x), var(--target-y)) scale(var(--final-scale)) rotate(var(--target-r));
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="butterfly-overlay"></div>
+
+  <div class="header-container">
+    <div class="mail-title">You got a mail!</div>
+  </div>
+
+  <div class="envelope-container" id="envelope">
+    <div class="flap-top"></div>
+    <div class="flap-left"></div>
+    <div class="flap-right"></div>
+    <div class="flap-bottom"></div>
+
+    <div class="wax-seal" id="waxSeal">
+      <svg viewBox="0 0 24 24">
+        <path d="M12,2C11.5,3.5 10.5,5 9,6.5C7,4.5 4,3.5 2,5C0,6.5 0.5,10 2.5,12C0.5,14 0,17.5 2,19C4,20.5 7,19.5 9,17.5C10.5,19 11.5,20.5 12,22C12.5,20.5 13.5,19 15,17.5C17,19.5 20,20.5 22,19C24,17.5 23.5,14 21.5,12C23.5,10 24,6.5 22,5C20,3.5 17,4.5 15,6.5C13.5,5 12.5,3.5 12,2Z"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="instruction">(Click on the wax seal to open!)</div>
+
+  <script>
+    const aestheticPalettes = [
+      { wing: '#d8b4fe', glow: 'rgba(216, 180, 254, 0.9)' },
+      { wing: '#f472b6', glow: 'rgba(244, 114, 182, 0.9)' },
+      { wing: '#c084fc', glow: 'rgba(192, 132, 252, 0.9)' },
+      { wing: '#fbefe8', glow: 'rgba(251, 207, 232, 0.9)' },
+      { wing: '#e9d5ff', glow: 'rgba(233, 213, 255, 0.9)' },
+      { wing: '#ffffff', glow: 'rgba(255, 255, 255, 1)' }
+    ];
+
+    function createAestheticButterflySVG(color) {
+      return `
+        <svg viewBox="0 0 100 100" style="width: 100%; height: 100%;">
+          <path d="M50,50 Q22,12 8,30 Q-6,58 35,68 Q48,58 50,50 Z" fill="${color}" opacity="0.95"/>
+          <path d="M50,50 Q26,22 16,32 Q8,52 35,60 Z" fill="#ffffff" opacity="0.3"/>
+          <circle cx="22" cy="34" r="3" fill="#ffffff" opacity="0.7"/>
+          <circle cx="30" cy="46" r="2" fill="#ffffff" opacity="0.6"/>
+        </svg>
+      `;
+    }
+
+    let isOpening = false;
+
+    function triggerTransitionEffect(e) {
+      if (e) e.stopPropagation();
+      if (isOpening) return;
+      isOpening = true;
+
+      const overlay = document.getElementById('butterfly-overlay');
+      const seal = document.getElementById('waxSeal');
+      const rect = seal.getBoundingClientRect();
+
+      const startX = rect.left + rect.width / 2;
+      const startY = rect.top + rect.height / 2;
+
+      for (let i = 0; i < 500; i++) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'bf-transition-item';
+
+        const bf3d = document.createElement('div');
+        bf3d.className = 'bf-3d';
+
+        const palette = aestheticPalettes[Math.floor(Math.random() * aestheticPalettes.length)];
+        const wingSVG = createAestheticButterflySVG(palette.wing);
+
+        const leftWing = document.createElement('div');
+        leftWing.className = 'bf-wing bf-wing-left';
+        leftWing.innerHTML = wingSVG;
+
+        const rightWing = document.createElement('div');
+        rightWing.className = 'bf-wing bf-wing-right';
+        rightWing.innerHTML = wingSVG;
+        rightWing.style.transform = 'scaleX(-1)';
+
+        bf3d.appendChild(leftWing);
+        bf3d.appendChild(rightWing);
+        wrapper.appendChild(bf3d);
+
+        const wingSize = Math.random() * 45 + 25;
+        wrapper.style.setProperty('--wing-size', wingSize + 'px');
+        wrapper.style.setProperty('--glow-color', palette.glow);
+
+        wrapper.style.left = startX + 'px';
+        wrapper.style.top = startY + 'px';
+
+        const angle = Math.random() * Math.PI * 2;
+        const distance = Math.max(window.innerWidth, window.innerHeight) * 1.5 + Math.random() * 300;
+
+        wrapper.style.setProperty('--target-x', Math.cos(angle) * distance + 'px');
+        wrapper.style.setProperty('--target-y', Math.sin(angle) * distance + 'px');
+        wrapper.style.setProperty('--target-r', (Math.random() - 0.5) * 540 + 'deg');
+        wrapper.style.setProperty('--final-scale', (Math.random() * 1.2 + 0.9).toFixed(2));
+
+        overlay.appendChild(wrapper);
+      }
+
+      setTimeout(() => {
+        window.location.href = 'greetings.html';
+      }, 1800);
+    }
+
+    const envelopeEl = document.getElementById('envelope');
+    const sealEl = document.getElementById('waxSeal');
+
+    sealEl.addEventListener('click', triggerTransitionEffect);
+    envelopeEl.addEventListener('click', triggerTransitionEffect);
+  </script>
+
+</body>
+</html>

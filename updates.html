@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bon Voyage</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Playfair+Display:ital,wght@0,600;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #231338;
+      background-image: repeating-linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.03) 0px,
+        rgba(255, 255, 255, 0.03) 50px,
+        transparent 50px,
+        transparent 100px
+      );
+      padding: 60px 15px 100px 15px;
+      user-select: none;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 760px;
+      display: flex;
+      flex-direction: column;
+      gap: 35px;
+      align-items: center;
+    }
+
+    .updates-header {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .updates-title {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(2.5rem, 5vw, 3.5rem);
+      color: #f3e8ff;
+      margin-bottom: 10px;
+      text-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .updates-subtitle {
+      font-family: 'Caveat', cursive;
+      font-size: 1.5rem;
+      color: #d8b4fe;
+      letter-spacing: 0.5px;
+    }
+
+    /* NOTES CARD STYLE */
+    .note-card {
+      width: 100%;
+      background: #fdfcfa;
+      color: #2a133d;
+      border-radius: 12px;
+      padding: 40px 35px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      background-size: 100% 36px;
+      background-image: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 35px,
+        rgba(168, 85, 247, 0.1) 35px,
+        rgba(168, 85, 247, 0.1) 36px
+      );
+      border-left: 5px solid #9333ea;
+      transform: rotate(-0.5deg);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .note-card:hover {
+      transform: translateY(-4px) rotate(0deg);
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
+    }
+
+    .note-header-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px dashed rgba(168, 85, 247, 0.3);
+      padding-bottom: 12px;
+    }
+
+    .note-date {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.85rem;
+      color: #7e22ce;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .note-badge {
+      font-family: 'Caveat', cursive;
+      font-size: 1.2rem;
+      color: #db2777;
+    }
+
+    .note-message {
+      font-family: 'Caveat', cursive;
+      font-size: 1.7rem;
+      color: #2a133d;
+      line-height: 1.55;
+      white-space: pre-wrap;
+    }
+
+    /* BACK BUTTON STYLE */
+    .back-letter-btn {
+      margin-top: 15px;
+      background: rgba(42, 19, 61, 0.7);
+      color: #f3e8ff;
+      border: 1.5px solid rgba(216, 180, 254, 0.35);
+      padding: 12px 30px;
+      border-radius: 30px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      text-decoration: none;
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      backdrop-filter: blur(5px);
+    }
+
+    .back-letter-btn:hover {
+      background: rgba(59, 17, 87, 0.9);
+      border-color: rgba(216, 180, 254, 0.7);
+      transform: translateY(-2px);
+      color: #ffffff;
+    }
+
+    @media (max-width: 768px) {
+      .note-card {
+        padding: 30px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <div class="updates-header">
+      <h1 class="updates-title"><i class="fa-solid fa-heart-pulse"></i> Notes When I Miss You</h1>
+      <p class="updates-subtitle">A special space for random thoughts and messages whenever I think of you, Ate Pam.</p>
+    </div>
+
+    <div class="note-card">
+      <div class="note-header-info">
+        <div class="note-date"><i class="fa-regular fa-calendar"></i> October 13, 2026</div>
+        <div class="note-badge">ill miss you!</div>
+      </div>
+      <div class="note-message">
+        Hello Ate Pam! Today is the day. Mag-iingat ka sa flight mo ha. Ill miss you! And happy birthday to me, I wish yoou were here :(
+      </div>
+    </div>
+
+    <a href="letter.html" class="back-letter-btn"><i class="fa-solid fa-arrow-left"></i> Back to Letter</a>
+
+  </div>
+
+</body>
+</html>

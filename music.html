@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Song & Playlists - Ate Pam</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Playfair+Display:ital,wght@0,600;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #231338;
+      background-image: repeating-linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.03) 0px,
+        rgba(255, 255, 255, 0.03) 50px,
+        transparent 50px,
+        transparent 100px
+      );
+      padding: 40px 15px 80px 15px;
+      user-select: none;
+    }
+
+    .main-container {
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      flex-direction: column;
+      gap: 50px;
+      align-items: center;
+    }
+
+    /* PURPLE THEME SA VINYL SECTION */
+    .song-section {
+      width: 100%;
+      background: linear-gradient(145deg, rgba(42, 19, 61, 0.95), rgba(26, 11, 46, 0.98));
+      border: 2px solid rgba(226, 209, 240, 0.35);
+      border-radius: 24px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.65);
+      padding: 50px 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+    }
+
+    .song-title {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(2rem, 4vw, 3rem);
+      color: #f3e8ff;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .song-content-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 35px;
+      width: 100%;
+      flex-wrap: wrap;
+    }
+
+    /* VINYL RECORD */
+    .vinyl-container {
+      position: relative;
+      width: 280px;
+      height: 280px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .vinyl-record {
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, #27272a 0%, #18181b 45%, #09090b 70%, #000000 100%);
+      border-radius: 50%;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.8), inset 0 0 15px rgba(255,255,255,0.1);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 3px solid #18181b;
+      animation: spinVinyl 3s linear infinite;
+      animation-play-state: paused;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+
+    .vinyl-container:hover .vinyl-record {
+      transform: scale(1.03);
+    }
+
+    .vinyl-record.playing {
+      animation-play-state: running;
+    }
+
+    @keyframes spinVinyl {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .vinyl-grooves {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: 
+        repeating-radial-gradient(
+          circle at center,
+          transparent,
+          transparent 8px,
+          rgba(255, 255, 255, 0.05) 9px,
+          transparent 10px
+        );
+      pointer-events: none;
+    }
+
+    .vinyl-shine {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 50%, rgba(255,255,255,0.05) 100%);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .vinyl-label {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(135deg, #9333ea, #581c87);
+      border-radius: 50%;
+      border: 4px solid #f3e8ff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      z-index: 3;
+      position: relative;
+    }
+
+    .vinyl-label-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.65rem;
+      color: #f3e8ff;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: bold;
+    }
+
+    .vinyl-center-hole {
+      width: 14px;
+      height: 14px;
+      background: #09090b;
+      border-radius: 50%;
+      border: 2px solid #c084fc;
+      margin-top: 4px;
+    }
+
+    .click-here-hint {
+      margin-top: 25px;
+      font-family: 'Caveat', cursive;
+      font-size: 1.6rem;
+      color: #e9d5ff;
+      text-decoration: underline;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .click-here-hint:hover {
+      color: #ffffff;
+    }
+
+    /* SPOTIFY PLAYLIST SECTION */
+    .playlist-section {
+      width: 100%;
+      background: linear-gradient(145deg, rgba(42, 19, 61, 0.95), rgba(26, 11, 46, 0.98));
+      border: 2px solid rgba(226, 209, 240, 0.35);
+      border-radius: 24px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.65);
+      padding: 45px 35px;
+      display: flex;
+      flex-direction: column;
+      gap: 35px;
+      backdrop-filter: blur(10px);
+    }
+
+    .playlist-header-title {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 2.2rem;
+      color: #f3e8ff;
+      text-align: center;
+      border-bottom: 1px solid rgba(216, 180, 254, 0.2);
+      padding-bottom: 15px;
+    }
+
+    .playlist-category-group {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .category-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #d8b4fe;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .spotify-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      width: 100%;
+    }
+
+    .spotify-card {
+      background: rgba(26, 11, 46, 0.7);
+      border: 1px solid rgba(216, 180, 254, 0.2);
+      border-radius: 16px;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .spotify-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(216, 180, 254, 0.5);
+    }
+
+    .spotify-card-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: #f3e8ff;
+      text-align: center;
+    }
+
+    .back-letter-btn {
+      margin-top: 15px;
+      background: rgba(42, 19, 61, 0.7);
+      color: #f3e8ff;
+      border: 1.5px solid rgba(216, 180, 254, 0.35);
+      padding: 12px 28px;
+      border-radius: 30px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      text-decoration: none;
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+      display: inline-block;
+      backdrop-filter: blur(5px);
+      align-self: center;
+    }
+
+    .back-letter-btn:hover {
+      background: rgba(59, 17, 87, 0.9);
+      border-color: rgba(216, 180, 254, 0.7);
+      transform: translateY(-2px);
+      color: #ffffff;
+    }
+
+    @media (max-width: 768px) {
+      .song-section, .playlist-section {
+        padding: 30px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="main-container">
+    
+    <div class="song-section">
+      <h2 class="song-title">This song reminds me of you</h2>
+
+      <div class="song-content-wrapper">
+        <div class="vinyl-container" onclick="toggleVinyl()">
+          <div class="vinyl-record" id="vinylRecord">
+            <div class="vinyl-grooves"></div>
+            <div class="vinyl-shine"></div>
+            <div class="vinyl-label">
+              <span class="vinyl-label-text">Ate Pam</span>
+              <div class="vinyl-center-hole"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="click-here-hint" id="hintText" onclick="toggleVinyl()">Click here to spin vinyl</div>
+
+      <audio id="audioPlayer" src="music/safeandsound.mp3" preload="auto"></audio>
+    </div>
+
+    <div class="playlist-section">
+      <h3 class="playlist-header-title">Playlist For You</h3>
+
+      <div class="playlist-category-group">
+        <div class="category-title">Flight Playlists</div>
+        <div class="spotify-grid">
+          <div class="spotify-card">
+            <span class="spotify-card-title">OPM</span>
+            <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/4kvETCojwATvYUOiZcwg28?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+          </div>
+          <div class="spotify-card">
+            <span class="spotify-card-title">International</span>
+            <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/1mwIluT6YC7UOrVfMNoowr?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+          </div>
+        </div>
+      </div>
+
+      <div class="playlist-category-group">
+        <div class="category-title">Comfort Playlists</div>
+        <div class="spotify-grid">
+          <div class="spotify-card">
+            <span class="spotify-card-title">Warm Embraces</span>
+            <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/75CE27H9zU4PzKGN7PX4G9?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+          </div>
+          <div class="spotify-card">
+            <span class="spotify-card-title">Late Night</span>
+            <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/0KBu9d8rMW756q3M4Ow7ZM?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+          </div>
+        </div>
+      </div>
+
+      <div class="playlist-category-group">
+        <div class="category-title">Praise and Worship</div>
+        <div class="spotify-grid">
+          <div class="spotify-card">
+            <span class="spotify-card-title">Peaceful Worship</span>
+            <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/1vOh0r3BRIIbkJCn4Yc5od?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+          </div>
+          <div class="spotify-card">
+            <span class="spotify-card-title">Uplifting</span>
+            <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/1IHorr8nQp86Uwl3FNB46a?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+          </div>
+        </div>
+      </div>
+
+      <a href="letter.html" class="back-letter-btn">Back to Letter</a>
+    </div>
+
+  </div>
+
+  <script>
+    let isPlaying = false;
+    const vinyl = document.getElementById('vinylRecord');
+    const audio = document.getElementById('audioPlayer');
+    const hint = document.getElementById('hintText');
+
+    function toggleVinyl() {
+      if (isPlaying) {
+        audio.pause();
+        vinyl.classList.remove('playing');
+        if (hint) hint.innerText = "Click here to spin vinyl";
+        isPlaying = false;
+      } else {
+        audio.play().then(() => {
+          vinyl.classList.add('playing');
+          if (hint) hint.innerText = "Click to pause music";
+          isPlaying = true;
+        }).catch(err => {
+          console.log("Audio play error:", err);
+        });
+      }
+    }
+
+    audio.onended = function() {
+      vinyl.classList.remove('playing');
+      if (hint) hint.innerText = "Click here to spin vinyl";
+      isPlaying = false;
+    };
+  </script>
+
+</body>
+</html>

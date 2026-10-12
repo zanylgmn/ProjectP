@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Album One - Memories</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Playfair+Display:ital,wght@0,600;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #231338;
+      background-image: repeating-linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.03) 0px,
+        rgba(255, 255, 255, 0.03) 50px,
+        transparent 50px,
+        transparent 100px
+      );
+      padding: 50px 20px 80px 20px;
+      user-select: none;
+    }
+
+    .album-wrapper {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .album-header {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .album-title {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      color: #f3e8ff;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+    }
+
+    .album-subtitle {
+      font-family: 'Caveat', cursive;
+      font-size: 1.5rem;
+      color: #d8b4fe;
+    }
+
+    /* POLAROID GRID LAYOUT */
+    .polaroid-grid {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 30px;
+      padding: 20px 0;
+    }
+
+    .polaroid-card {
+      background: #fdfbf7;
+      padding: 12px 12px 20px 12px;
+      border-radius: 4px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+      position: relative;
+    }
+
+    .polaroid-card:nth-child(even) {
+      transform: rotate(1.5deg);
+    }
+
+    .polaroid-card:nth-child(3n) {
+      transform: rotate(-1.5deg);
+    }
+
+    .polaroid-card:nth-child(5n) {
+      transform: rotate(0.8deg);
+    }
+
+    .polaroid-card:hover {
+      transform: translateY(-8px) scale(1.03) rotate(0deg) !important;
+      box-shadow: 0 25px 50px rgba(168, 85, 247, 0.4);
+      z-index: 10;
+    }
+
+    .polaroid-img-container {
+      width: 100%;
+      height: 240px;
+      overflow: hidden;
+      background: #eee;
+      border-radius: 2px;
+    }
+
+    .polaroid-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .polaroid-card:hover .polaroid-img {
+      transform: scale(1.05);
+    }
+
+    .polaroid-caption {
+      font-family: 'Caveat', cursive;
+      font-size: 1.35rem;
+      color: #2a133d;
+      text-align: center;
+      margin-top: 14px;
+      line-height: 1;
+    }
+
+    /* BACK TO LETTER BUTTON SA PINAKABABA */
+    .footer-action {
+      margin-top: 30px;
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .back-btn {
+      background: rgba(42, 19, 61, 0.85);
+      color: #f3e8ff;
+      border: 1.5px solid rgba(216, 180, 254, 0.4);
+      padding: 14px 32px;
+      border-radius: 35px;
+      font-size: 1rem;
+      font-weight: 500;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    }
+
+    .back-btn:hover {
+      background: rgba(69, 21, 102, 0.95);
+      border-color: rgba(216, 180, 254, 0.8);
+      transform: translateY(-3px);
+      box-shadow: 0 15px 30px rgba(168, 85, 247, 0.3);
+    }
+
+    /* LIGHTBOX MODAL */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 6, 26, 0.92);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 20px;
+      backdrop-filter: blur(10px);
+    }
+
+    .lightbox.active {
+      display: flex;
+    }
+
+    .lightbox-content {
+      position: relative;
+      max-width: 90%;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      background: #fdfbf7;
+      padding: 16px 16px 24px 16px;
+      border-radius: 6px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
+    }
+
+    .lightbox-img {
+      max-width: 100%;
+      max-height: 72vh;
+      object-fit: contain;
+      border-radius: 2px;
+    }
+
+    .lightbox-caption {
+      font-family: 'Caveat', cursive;
+      font-size: 1.6rem;
+      color: #2a133d;
+      text-align: center;
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: -45px;
+      right: 0;
+      background: transparent;
+      border: none;
+      color: #f3e8ff;
+      font-size: 2.2rem;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+
+    .lightbox-close:hover {
+      color: #f472b6;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="album-wrapper">
+    <div class="album-header">
+      <h1 class="album-title">First Bond</h1>
+      <p class="album-subtitle">The Core Memory</p>
+    </div>
+
+    <!-- POLAROID GRID CONTAINER -->
+    <div class="polaroid-grid">
+      <!-- 200 Polaroids na kumukuha sa loob ng images/album1/ -->
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo1.jpeg', 'Memory 1')">
+        <div class="polaroid-img-container"><img src="images/album1/photo1.jpeg" class="polaroid-img" alt="Memory 1"></div>
+        <div class="polaroid-caption">Memory 1</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo2.jpeg', 'Memory 2')">
+        <div class="polaroid-img-container"><img src="images/album1/photo2.jpeg" class="polaroid-img" alt="Memory 2"></div>
+        <div class="polaroid-caption">Memory 2</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo3.jpeg', 'Memory 3')">
+        <div class="polaroid-img-container"><img src="images/album1/photo3.jpeg" class="polaroid-img" alt="Memory 3"></div>
+        <div class="polaroid-caption">Memory 3</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo4.jpeg', 'Memory 4')">
+        <div class="polaroid-img-container"><img src="images/album1/photo4.jpeg" class="polaroid-img" alt="Memory 4"></div>
+        <div class="polaroid-caption">Memory 4</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo5.jpeg', 'Memory 5')">
+        <div class="polaroid-img-container"><img src="images/album1/photo5.jpeg" class="polaroid-img" alt="Memory 5"></div>
+        <div class="polaroid-caption">Memory 5</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo6.jpeg', 'Memory 6')">
+        <div class="polaroid-img-container"><img src="images/album1/photo6.jpeg" class="polaroid-img" alt="Memory 6"></div>
+        <div class="polaroid-caption">Memory 6</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo7.jpeg', 'Memory 7')">
+        <div class="polaroid-img-container"><img src="images/album1/photo7.jpeg" class="polaroid-img" alt="Memory 7"></div>
+        <div class="polaroid-caption">Memory 7</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo8.jpeg', 'Memory 8')">
+        <div class="polaroid-img-container"><img src="images/album1/photo8.jpeg" class="polaroid-img" alt="Memory 8"></div>
+        <div class="polaroid-caption">Memory 8</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo9.jpeg', 'Memory 9')">
+        <div class="polaroid-img-container"><img src="images/album1/photo9.jpeg" class="polaroid-img" alt="Memory 9"></div>
+        <div class="polaroid-caption">Memory 9</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo10.jpeg', 'Memory 10')">
+        <div class="polaroid-img-container"><img src="images/album1/photo10.jpeg" class="polaroid-img" alt="Memory 10"></div>
+        <div class="polaroid-caption">Memory 10</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo11.jpeg', 'Memory 11')">
+        <div class="polaroid-img-container"><img src="images/album1/photo11.jpeg" class="polaroid-img" alt="Memory 11"></div>
+        <div class="polaroid-caption">Memory 11</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo12.jpeg', 'Memory 12')">
+        <div class="polaroid-img-container"><img src="images/album1/photo12.jpeg" class="polaroid-img" alt="Memory 12"></div>
+        <div class="polaroid-caption">Memory 12</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo13.jpeg', 'Memory 13')">
+        <div class="polaroid-img-container"><img src="images/album1/photo13.jpeg" class="polaroid-img" alt="Memory 13"></div>
+        <div class="polaroid-caption">Memory 13</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo14.jpeg', 'Memory 14')">
+        <div class="polaroid-img-container"><img src="images/album1/photo14.jpeg" class="polaroid-img" alt="Memory 14"></div>
+        <div class="polaroid-caption">Memory 14</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo15.jpeg', 'Memory 15')">
+        <div class="polaroid-img-container"><img src="images/album1/photo15.jpeg" class="polaroid-img" alt="Memory 15"></div>
+        <div class="polaroid-caption">Memory 15</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo16.jpeg', 'Memory 16')">
+        <div class="polaroid-img-container"><img src="images/album1/photo16.jpeg" class="polaroid-img" alt="Memory 16"></div>
+        <div class="polaroid-caption">Memory 16</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo17.jpeg', 'Memory 17')">
+        <div class="polaroid-img-container"><img src="images/album1/photo17.jpeg" class="polaroid-img" alt="Memory 17"></div>
+        <div class="polaroid-caption">Memory 17</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo18.jpeg', 'Memory 18')">
+        <div class="polaroid-img-container"><img src="images/album1/photo18.jpeg" class="polaroid-img" alt="Memory 18"></div>
+        <div class="polaroid-caption">Memory 18</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo19.jpeg', 'Memory 19')">
+        <div class="polaroid-img-container"><img src="images/album1/photo19.jpeg" class="polaroid-img" alt="Memory 19"></div>
+        <div class="polaroid-caption">Memory 19</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo20.jpeg', 'Memory 20')">
+        <div class="polaroid-img-container"><img src="images/album1/photo20.jpeg" class="polaroid-img" alt="Memory 20"></div>
+        <div class="polaroid-caption">Memory 20</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo21.jpeg', 'Memory 21')">
+        <div class="polaroid-img-container"><img src="images/album1/photo21.jpeg" class="polaroid-img" alt="Memory 21"></div>
+        <div class="polaroid-caption">Memory 21</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo22.jpeg', 'Memory 22')">
+        <div class="polaroid-img-container"><img src="images/album1/photo22.jpeg" class="polaroid-img" alt="Memory 22"></div>
+        <div class="polaroid-caption">Memory 22</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo23.jpeg', 'Memory 23')">
+        <div class="polaroid-img-container"><img src="images/album1/photo23.jpeg" class="polaroid-img" alt="Memory 23"></div>
+        <div class="polaroid-caption">Memory 23</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo24.jpeg', 'Memory 24')">
+        <div class="polaroid-img-container"><img src="images/album1/photo24.jpeg" class="polaroid-img" alt="Memory 24"></div>
+        <div class="polaroid-caption">Memory 24</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo25.jpeg', 'Memory 25')">
+        <div class="polaroid-img-container"><img src="images/album1/photo25.jpeg" class="polaroid-img" alt="Memory 25"></div>
+        <div class="polaroid-caption">Memory 25</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo26.jpeg', 'Memory 26')">
+        <div class="polaroid-img-container"><img src="images/album1/photo26.jpeg" class="polaroid-img" alt="Memory 26"></div>
+        <div class="polaroid-caption">Memory 26</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo27.jpeg', 'Memory 27')">
+        <div class="polaroid-img-container"><img src="images/album1/photo27.jpeg" class="polaroid-img" alt="Memory 27"></div>
+        <div class="polaroid-caption">Memory 27</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo28.jpeg', 'Memory 28')">
+        <div class="polaroid-img-container"><img src="images/album1/photo28.jpeg" class="polaroid-img" alt="Memory 28"></div>
+        <div class="polaroid-caption">Memory 28</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo29.jpeg', 'Memory 29')">
+        <div class="polaroid-img-container"><img src="images/album1/photo29.jpeg" class="polaroid-img" alt="Memory 29"></div>
+        <div class="polaroid-caption">Memory 29</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo30.jpeg', 'Memory 30')">
+        <div class="polaroid-img-container"><img src="images/album1/photo30.jpeg" class="polaroid-img" alt="Memory 30"></div>
+        <div class="polaroid-caption">Memory 30</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo31.jpeg', 'Memory 31')">
+        <div class="polaroid-img-container"><img src="images/album1/photo31.jpeg" class="polaroid-img" alt="Memory 31"></div>
+        <div class="polaroid-caption">Memory 31</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo32.jpeg', 'Memory 32')">
+        <div class="polaroid-img-container"><img src="images/album1/photo32.jpeg" class="polaroid-img" alt="Memory 32"></div>
+        <div class="polaroid-caption">Memory 32</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo33.jpeg', 'Memory 33')">
+        <div class="polaroid-img-container"><img src="images/album1/photo33.jpeg" class="polaroid-img" alt="Memory 33"></div>
+        <div class="polaroid-caption">Memory 33</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo34.jpeg', 'Memory 34')">
+        <div class="polaroid-img-container"><img src="images/album1/photo34.jpeg" class="polaroid-img" alt="Memory 34"></div>
+        <div class="polaroid-caption">Memory 34</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo35.jpeg', 'Memory 35')">
+        <div class="polaroid-img-container"><img src="images/album1/photo35.jpeg" class="polaroid-img" alt="Memory 35"></div>
+        <div class="polaroid-caption">Memory 35</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo36.jpeg', 'Memory 36')">
+        <div class="polaroid-img-container"><img src="images/album1/photo36.jpeg" class="polaroid-img" alt="Memory 36"></div>
+        <div class="polaroid-caption">Memory 36</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo37.jpeg', 'Memory 37')">
+        <div class="polaroid-img-container"><img src="images/album1/photo37.jpeg" class="polaroid-img" alt="Memory 37"></div>
+        <div class="polaroid-caption">Memory 37</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo38.jpeg', 'Memory 38')">
+        <div class="polaroid-img-container"><img src="images/album1/photo38.jpeg" class="polaroid-img" alt="Memory 38"></div>
+        <div class="polaroid-caption">Memory 38</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo39.jpeg', 'Memory 39')">
+        <div class="polaroid-img-container"><img src="images/album1/photo39.jpeg" class="polaroid-img" alt="Memory 39"></div>
+        <div class="polaroid-caption">Memory 39</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo40.jpeg', 'Memory 40')">
+        <div class="polaroid-img-container"><img src="images/album1/photo40.jpeg" class="polaroid-img" alt="Memory 40"></div>
+        <div class="polaroid-caption">Memory 40</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo41.jpeg', 'Memory 41')">
+        <div class="polaroid-img-container"><img src="images/album1/photo41.jpeg" class="polaroid-img" alt="Memory 41"></div>
+        <div class="polaroid-caption">Memory 41</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo42.jpeg', 'Memory 42')">
+        <div class="polaroid-img-container"><img src="images/album1/photo42.jpeg" class="polaroid-img" alt="Memory 42"></div>
+        <div class="polaroid-caption">Memory 42</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo43.jpeg', 'Memory 43')">
+        <div class="polaroid-img-container"><img src="images/album1/photo43.jpeg" class="polaroid-img" alt="Memory 43"></div>
+        <div class="polaroid-caption">Memory 43</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo44.jpeg', 'Memory 44')">
+        <div class="polaroid-img-container"><img src="images/album1/photo44.jpeg" class="polaroid-img" alt="Memory 44"></div>
+        <div class="polaroid-caption">Memory 44</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo45.jpeg', 'Memory 45')">
+        <div class="polaroid-img-container"><img src="images/album1/photo45.jpeg" class="polaroid-img" alt="Memory 45"></div>
+        <div class="polaroid-caption">Memory 45</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo46.jpeg', 'Memory 46')">
+        <div class="polaroid-img-container"><img src="images/album1/photo46.jpeg" class="polaroid-img" alt="Memory 46"></div>
+        <div class="polaroid-caption">Memory 46</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo47.jpeg', 'Memory 47')">
+        <div class="polaroid-img-container"><img src="images/album1/photo47.jpeg" class="polaroid-img" alt="Memory 47"></div>
+        <div class="polaroid-caption">Memory 47</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo48.jpeg', 'Memory 48')">
+        <div class="polaroid-img-container"><img src="images/album1/photo48.jpeg" class="polaroid-img" alt="Memory 48"></div>
+        <div class="polaroid-caption">Memory 48</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo49.jpeg', 'Memory 49')">
+        <div class="polaroid-img-container"><img src="images/album1/photo49.jpeg" class="polaroid-img" alt="Memory 49"></div>
+        <div class="polaroid-caption">Memory 49</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo50.jpeg', 'Memory 50')">
+        <div class="polaroid-img-container"><img src="images/album1/photo50.jpeg" class="polaroid-img" alt="Memory 50"></div>
+        <div class="polaroid-caption">Memory 50</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo51.jpeg', 'Memory 51')">
+        <div class="polaroid-img-container"><img src="images/album1/photo51.jpeg" class="polaroid-img" alt="Memory 51"></div>
+        <div class="polaroid-caption">Memory 51</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo52.jpeg', 'Memory 52')">
+        <div class="polaroid-img-container"><img src="images/album1/photo52.jpeg" class="polaroid-img" alt="Memory 52"></div>
+        <div class="polaroid-caption">Memory 52</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo53.jpeg', 'Memory 53')">
+        <div class="polaroid-img-container"><img src="images/album1/photo53.jpeg" class="polaroid-img" alt="Memory 53"></div>
+        <div class="polaroid-caption">Memory 53</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo54.jpeg', 'Memory 54')">
+        <div class="polaroid-img-container"><img src="images/album1/photo54.jpeg" class="polaroid-img" alt="Memory 54"></div>
+        <div class="polaroid-caption">Memory 54</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo55.jpeg', 'Memory 55')">
+        <div class="polaroid-img-container"><img src="images/album1/photo55.jpeg" class="polaroid-img" alt="Memory 55"></div>
+        <div class="polaroid-caption">Memory 55</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo56.jpeg', 'Memory 56')">
+        <div class="polaroid-img-container"><img src="images/album1/photo56.jpeg" class="polaroid-img" alt="Memory 56"></div>
+        <div class="polaroid-caption">Memory 56</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo57.jpeg', 'Memory 57')">
+        <div class="polaroid-img-container"><img src="images/album1/photo57.jpeg" class="polaroid-img" alt="Memory 57"></div>
+        <div class="polaroid-caption">Memory 57</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo58.jpeg', 'Memory 58')">
+        <div class="polaroid-img-container"><img src="images/album1/photo58.jpeg" class="polaroid-img" alt="Memory 58"></div>
+        <div class="polaroid-caption">Memory 58</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo59.jpeg', 'Memory 59')">
+        <div class="polaroid-img-container"><img src="images/album1/photo59.jpeg" class="polaroid-img" alt="Memory 59"></div>
+        <div class="polaroid-caption">Memory 59</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo60.jpeg', 'Memory 60')">
+        <div class="polaroid-img-container"><img src="images/album1/photo60.jpeg" class="polaroid-img" alt="Memory 60"></div>
+        <div class="polaroid-caption">Memory 60</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo61.jpeg', 'Memory 61')">
+        <div class="polaroid-img-container"><img src="images/album1/photo61.jpeg" class="polaroid-img" alt="Memory 61"></div>
+        <div class="polaroid-caption">Memory 61</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo62.jpeg', 'Memory 62')">
+        <div class="polaroid-img-container"><img src="images/album1/photo62.jpeg" class="polaroid-img" alt="Memory 62"></div>
+        <div class="polaroid-caption">Memory 62</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo63.jpeg', 'Memory 63')">
+        <div class="polaroid-img-container"><img src="images/album1/photo63.jpeg" class="polaroid-img" alt="Memory 63"></div>
+        <div class="polaroid-caption">Memory 63</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo64.jpeg', 'Memory 64')">
+        <div class="polaroid-img-container"><img src="images/album1/photo64.jpeg" class="polaroid-img" alt="Memory 64"></div>
+        <div class="polaroid-caption">Memory 64</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo65.jpeg', 'Memory 65')">
+        <div class="polaroid-img-container"><img src="images/album1/photo65.jpeg" class="polaroid-img" alt="Memory 65"></div>
+        <div class="polaroid-caption">Memory 65</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo66.jpeg', 'Memory 66')">
+        <div class="polaroid-img-container"><img src="images/album1/photo66.jpeg" class="polaroid-img" alt="Memory 66"></div>
+        <div class="polaroid-caption">Memory 66</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo67.jpeg', 'Memory 67')">
+        <div class="polaroid-img-container"><img src="images/album1/photo67.jpeg" class="polaroid-img" alt="Memory 67"></div>
+        <div class="polaroid-caption">Memory 67</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo68.jpeg', 'Memory 68')">
+        <div class="polaroid-img-container"><img src="images/album1/photo68.jpeg" class="polaroid-img" alt="Memory 68"></div>
+        <div class="polaroid-caption">Memory 68</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo69.jpeg', 'Memory 69')">
+        <div class="polaroid-img-container"><img src="images/album1/photo69.jpeg" class="polaroid-img" alt="Memory 69"></div>
+        <div class="polaroid-caption">Memory 69</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo70.jpeg', 'Memory 70')">
+        <div class="polaroid-img-container"><img src="images/album1/photo70.jpeg" class="polaroid-img" alt="Memory 70"></div>
+        <div class="polaroid-caption">Memory 70</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo71.jpeg', 'Memory 71')">
+        <div class="polaroid-img-container"><img src="images/album1/photo71.jpeg" class="polaroid-img" alt="Memory 71"></div>
+        <div class="polaroid-caption">Memory 71</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo72.jpeg', 'Memory 72')">
+        <div class="polaroid-img-container"><img src="images/album1/photo72.jpeg" class="polaroid-img" alt="Memory 72"></div>
+        <div class="polaroid-caption">Memory 72</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo73.jpeg', 'Memory 73')">
+        <div class="polaroid-img-container"><img src="images/album1/photo73.jpeg" class="polaroid-img" alt="Memory 73"></div>
+        <div class="polaroid-caption">Memory 73</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo74.jpeg', 'Memory 74')">
+        <div class="polaroid-img-container"><img src="images/album1/photo74.jpeg" class="polaroid-img" alt="Memory 74"></div>
+        <div class="polaroid-caption">Memory 74</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo75.jpeg', 'Memory 75')">
+        <div class="polaroid-img-container"><img src="images/album1/photo75.jpeg" class="polaroid-img" alt="Memory 75"></div>
+        <div class="polaroid-caption">Memory 75</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo76.jpeg', 'Memory 76')">
+        <div class="polaroid-img-container"><img src="images/album1/photo76.jpeg" class="polaroid-img" alt="Memory 76"></div>
+        <div class="polaroid-caption">Memory 76</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo77.jpeg', 'Memory 77')">
+        <div class="polaroid-img-container"><img src="images/album1/photo77.jpeg" class="polaroid-img" alt="Memory 77"></div>
+        <div class="polaroid-caption">Memory 77</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo78.jpeg', 'Memory 78')">
+        <div class="polaroid-img-container"><img src="images/album1/photo78.jpeg" class="polaroid-img" alt="Memory 78"></div>
+        <div class="polaroid-caption">Memory 78</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo79.jpeg', 'Memory 79')">
+        <div class="polaroid-img-container"><img src="images/album1/photo79.jpeg" class="polaroid-img" alt="Memory 79"></div>
+        <div class="polaroid-caption">Memory 79</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo80.jpeg', 'Memory 80')">
+        <div class="polaroid-img-container"><img src="images/album1/photo80.jpeg" class="polaroid-img" alt="Memory 80"></div>
+        <div class="polaroid-caption">Memory 80</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo81.jpeg', 'Memory 81')">
+        <div class="polaroid-img-container"><img src="images/album1/photo81.jpeg" class="polaroid-img" alt="Memory 81"></div>
+        <div class="polaroid-caption">Memory 81</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo82.jpeg', 'Memory 82')">
+        <div class="polaroid-img-container"><img src="images/album1/photo82.jpeg" class="polaroid-img" alt="Memory 82"></div>
+        <div class="polaroid-caption">Memory 82</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo83.jpeg', 'Memory 83')">
+        <div class="polaroid-img-container"><img src="images/album1/photo83.jpeg" class="polaroid-img" alt="Memory 83"></div>
+        <div class="polaroid-caption">Memory 83</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo84.jpeg', 'Memory 84')">
+        <div class="polaroid-img-container"><img src="images/album1/photo84.jpeg" class="polaroid-img" alt="Memory 84"></div>
+        <div class="polaroid-caption">Memory 84</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo85.jpeg', 'Memory 85')">
+        <div class="polaroid-img-container"><img src="images/album1/photo85.jpeg" class="polaroid-img" alt="Memory 85"></div>
+        <div class="polaroid-caption">Memory 85</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo86.jpeg', 'Memory 86')">
+        <div class="polaroid-img-container"><img src="images/album1/photo86.jpeg" class="polaroid-img" alt="Memory 86"></div>
+        <div class="polaroid-caption">Memory 86</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo87.jpeg', 'Memory 87')">
+        <div class="polaroid-img-container"><img src="images/album1/photo87.jpeg" class="polaroid-img" alt="Memory 87"></div>
+        <div class="polaroid-caption">Memory 87</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo88.jpeg', 'Memory 88')">
+        <div class="polaroid-img-container"><img src="images/album1/photo88.jpeg" class="polaroid-img" alt="Memory 88"></div>
+        <div class="polaroid-caption">Memory 88</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo89.jpeg', 'Memory 89')">
+        <div class="polaroid-img-container"><img src="images/album1/photo89.jpeg" class="polaroid-img" alt="Memory 89"></div>
+        <div class="polaroid-caption">Memory 89</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo90.jpeg', 'Memory 90')">
+        <div class="polaroid-img-container"><img src="images/album1/photo90.jpeg" class="polaroid-img" alt="Memory 90"></div>
+        <div class="polaroid-caption">Memory 90</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo91.jpeg', 'Memory 91')">
+        <div class="polaroid-img-container"><img src="images/album1/photo91.jpeg" class="polaroid-img" alt="Memory 91"></div>
+        <div class="polaroid-caption">Memory 91</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo92.jpeg', 'Memory 92')">
+        <div class="polaroid-img-container"><img src="images/album1/photo92.jpeg" class="polaroid-img" alt="Memory 92"></div>
+        <div class="polaroid-caption">Memory 92</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo93.jpeg', 'Memory 93')">
+        <div class="polaroid-img-container"><img src="images/album1/photo93.jpeg" class="polaroid-img" alt="Memory 93"></div>
+        <div class="polaroid-caption">Memory 93</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo94.jpeg', 'Memory 94')">
+        <div class="polaroid-img-container"><img src="images/album1/photo94.jpeg" class="polaroid-img" alt="Memory 94"></div>
+        <div class="polaroid-caption">Memory 94</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo95.jpeg', 'Memory 95')">
+        <div class="polaroid-img-container"><img src="images/album1/photo95.jpeg" class="polaroid-img" alt="Memory 95"></div>
+        <div class="polaroid-caption">Memory 95</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo96.jpeg', 'Memory 96')">
+        <div class="polaroid-img-container"><img src="images/album1/photo96.jpeg" class="polaroid-img" alt="Memory 96"></div>
+        <div class="polaroid-caption">Memory 96</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo97.jpeg', 'Memory 97')">
+        <div class="polaroid-img-container"><img src="images/album1/photo97.jpeg" class="polaroid-img" alt="Memory 97"></div>
+        <div class="polaroid-caption">Memory 97</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo98.jpeg', 'Memory 98')">
+        <div class="polaroid-img-container"><img src="images/album1/photo98.jpeg" class="polaroid-img" alt="Memory 98"></div>
+        <div class="polaroid-caption">Memory 98</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo99.jpeg', 'Memory 99')">
+        <div class="polaroid-img-container"><img src="images/album1/photo99.jpeg" class="polaroid-img" alt="Memory 99"></div>
+        <div class="polaroid-caption">Memory 99</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo100.jpeg', 'Memory 100')">
+        <div class="polaroid-img-container"><img src="images/album1/photo100.jpeg" class="polaroid-img" alt="Memory 100"></div>
+        <div class="polaroid-caption">Memory 100</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo101.jpeg', 'Memory 101')">
+        <div class="polaroid-img-container"><img src="images/album1/photo101.jpeg" class="polaroid-img" alt="Memory 101"></div>
+        <div class="polaroid-caption">Memory 101</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo102.jpeg', 'Memory 102')">
+        <div class="polaroid-img-container"><img src="images/album1/photo102.jpeg" class="polaroid-img" alt="Memory 102"></div>
+        <div class="polaroid-caption">Memory 102</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo103.jpeg', 'Memory 103')">
+        <div class="polaroid-img-container"><img src="images/album1/photo103.jpeg" class="polaroid-img" alt="Memory 103"></div>
+        <div class="polaroid-caption">Memory 103</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo104.jpeg', 'Memory 104')">
+        <div class="polaroid-img-container"><img src="images/album1/photo104.jpeg" class="polaroid-img" alt="Memory 104"></div>
+        <div class="polaroid-caption">Memory 104</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo105.jpeg', 'Memory 105')">
+        <div class="polaroid-img-container"><img src="images/album1/photo105.jpeg" class="polaroid-img" alt="Memory 105"></div>
+        <div class="polaroid-caption">Memory 105</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo106.jpeg', 'Memory 106')">
+        <div class="polaroid-img-container"><img src="images/album1/photo106.jpeg" class="polaroid-img" alt="Memory 106"></div>
+        <div class="polaroid-caption">Memory 106</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo107.jpeg', 'Memory 107')">
+        <div class="polaroid-img-container"><img src="images/album1/photo107.jpeg" class="polaroid-img" alt="Memory 107"></div>
+        <div class="polaroid-caption">Memory 107</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo108.jpeg', 'Memory 108')">
+        <div class="polaroid-img-container"><img src="images/album1/photo108.jpeg" class="polaroid-img" alt="Memory 108"></div>
+        <div class="polaroid-caption">Memory 108</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo109.jpeg', 'Memory 109')">
+        <div class="polaroid-img-container"><img src="images/album1/photo109.jpeg" class="polaroid-img" alt="Memory 109"></div>
+        <div class="polaroid-caption">Memory 109</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo110.jpeg', 'Memory 110')">
+        <div class="polaroid-img-container"><img src="images/album1/photo110.jpeg" class="polaroid-img" alt="Memory 110"></div>
+        <div class="polaroid-caption">Memory 110</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo111.jpeg', 'Memory 111')">
+        <div class="polaroid-img-container"><img src="images/album1/photo111.jpeg" class="polaroid-img" alt="Memory 111"></div>
+        <div class="polaroid-caption">Memory 111</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo112.jpeg', 'Memory 112')">
+        <div class="polaroid-img-container"><img src="images/album1/photo112.jpeg" class="polaroid-img" alt="Memory 112"></div>
+        <div class="polaroid-caption">Memory 112</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo113.jpeg', 'Memory 113')">
+        <div class="polaroid-img-container"><img src="images/album1/photo113.jpeg" class="polaroid-img" alt="Memory 113"></div>
+        <div class="polaroid-caption">Memory 113</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo114.jpeg', 'Memory 114')">
+        <div class="polaroid-img-container"><img src="images/album1/photo114.jpeg" class="polaroid-img" alt="Memory 114"></div>
+        <div class="polaroid-caption">Memory 114</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo115.jpeg', 'Memory 115')">
+        <div class="polaroid-img-container"><img src="images/album1/photo115.jpeg" class="polaroid-img" alt="Memory 115"></div>
+        <div class="polaroid-caption">Memory 115</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo116.jpeg', 'Memory 116')">
+        <div class="polaroid-img-container"><img src="images/album1/photo116.jpeg" class="polaroid-img" alt="Memory 116"></div>
+        <div class="polaroid-caption">Memory 116</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo117.jpeg', 'Memory 117')">
+        <div class="polaroid-img-container"><img src="images/album1/photo117.jpeg" class="polaroid-img" alt="Memory 117"></div>
+        <div class="polaroid-caption">Memory 117</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo118.jpeg', 'Memory 118')">
+        <div class="polaroid-img-container"><img src="images/album1/photo118.jpeg" class="polaroid-img" alt="Memory 118"></div>
+        <div class="polaroid-caption">Memory 118</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo119.jpeg', 'Memory 119')">
+        <div class="polaroid-img-container"><img src="images/album1/photo119.jpeg" class="polaroid-img" alt="Memory 119"></div>
+        <div class="polaroid-caption">Memory 119</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo120.jpeg', 'Memory 120')">
+        <div class="polaroid-img-container"><img src="images/album1/photo120.jpeg" class="polaroid-img" alt="Memory 120"></div>
+        <div class="polaroid-caption">Memory 120</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo121.jpeg', 'Memory 121')">
+        <div class="polaroid-img-container"><img src="images/album1/photo121.jpeg" class="polaroid-img" alt="Memory 121"></div>
+        <div class="polaroid-caption">Memory 121</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo122.jpeg', 'Memory 122')">
+        <div class="polaroid-img-container"><img src="images/album1/photo122.jpeg" class="polaroid-img" alt="Memory 122"></div>
+        <div class="polaroid-caption">Memory 122</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo123.jpeg', 'Memory 123')">
+        <div class="polaroid-img-container"><img src="images/album1/photo123.jpeg" class="polaroid-img" alt="Memory 123"></div>
+        <div class="polaroid-caption">Memory 123</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo124.jpeg', 'Memory 124')">
+        <div class="polaroid-img-container"><img src="images/album1/photo124.jpeg" class="polaroid-img" alt="Memory 124"></div>
+        <div class="polaroid-caption">Memory 124</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo125.jpeg', 'Memory 125')">
+        <div class="polaroid-img-container"><img src="images/album1/photo125.jpeg" class="polaroid-img" alt="Memory 125"></div>
+        <div class="polaroid-caption">Memory 125</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo126.jpeg', 'Memory 126')">
+        <div class="polaroid-img-container"><img src="images/album1/photo126.jpeg" class="polaroid-img" alt="Memory 126"></div>
+        <div class="polaroid-caption">Memory 126</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo127.jpeg', 'Memory 127')">
+        <div class="polaroid-img-container"><img src="images/album1/photo127.jpeg" class="polaroid-img" alt="Memory 127"></div>
+        <div class="polaroid-caption">Memory 127</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo128.jpeg', 'Memory 128')">
+        <div class="polaroid-img-container"><img src="images/album1/photo128.jpeg" class="polaroid-img" alt="Memory 128"></div>
+        <div class="polaroid-caption">Memory 128</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo129.jpeg', 'Memory 129')">
+        <div class="polaroid-img-container"><img src="images/album1/photo129.jpeg" class="polaroid-img" alt="Memory 129"></div>
+        <div class="polaroid-caption">Memory 129</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo130.jpeg', 'Memory 130')">
+        <div class="polaroid-img-container"><img src="images/album1/photo130.jpeg" class="polaroid-img" alt="Memory 130"></div>
+        <div class="polaroid-caption">Memory 130</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo131.jpeg', 'Memory 131')">
+        <div class="polaroid-img-container"><img src="images/album1/photo131.jpeg" class="polaroid-img" alt="Memory 131"></div>
+        <div class="polaroid-caption">Memory 131</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo132.jpeg', 'Memory 132')">
+        <div class="polaroid-img-container"><img src="images/album1/photo132.jpeg" class="polaroid-img" alt="Memory 132"></div>
+        <div class="polaroid-caption">Memory 132</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo133.jpeg', 'Memory 133')">
+        <div class="polaroid-img-container"><img src="images/album1/photo133.jpeg" class="polaroid-img" alt="Memory 133"></div>
+        <div class="polaroid-caption">Memory 133</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo134.jpeg', 'Memory 134')">
+        <div class="polaroid-img-container"><img src="images/album1/photo134.jpeg" class="polaroid-img" alt="Memory 134"></div>
+        <div class="polaroid-caption">Memory 134</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo135.jpeg', 'Memory 135')">
+        <div class="polaroid-img-container"><img src="images/album1/photo135.jpeg" class="polaroid-img" alt="Memory 135"></div>
+        <div class="polaroid-caption">Memory 135</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo136.jpeg', 'Memory 136')">
+        <div class="polaroid-img-container"><img src="images/album1/photo136.jpeg" class="polaroid-img" alt="Memory 136"></div>
+        <div class="polaroid-caption">Memory 136</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo137.jpeg', 'Memory 137')">
+        <div class="polaroid-img-container"><img src="images/album1/photo137.jpeg" class="polaroid-img" alt="Memory 137"></div>
+        <div class="polaroid-caption">Memory 137</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo138.jpeg', 'Memory 138')">
+        <div class="polaroid-img-container"><img src="images/album1/photo138.jpeg" class="polaroid-img" alt="Memory 138"></div>
+        <div class="polaroid-caption">Memory 138</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo139.jpeg', 'Memory 139')">
+        <div class="polaroid-img-container"><img src="images/album1/photo139.jpeg" class="polaroid-img" alt="Memory 139"></div>
+        <div class="polaroid-caption">Memory 139</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo140.jpeg', 'Memory 140')">
+        <div class="polaroid-img-container"><img src="images/album1/photo140.jpeg" class="polaroid-img" alt="Memory 140"></div>
+        <div class="polaroid-caption">Memory 140</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo141.jpeg', 'Memory 141')">
+        <div class="polaroid-img-container"><img src="images/album1/photo141.jpeg" class="polaroid-img" alt="Memory 141"></div>
+        <div class="polaroid-caption">Memory 141</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo142.jpeg', 'Memory 142')">
+        <div class="polaroid-img-container"><img src="images/album1/photo142.jpeg" class="polaroid-img" alt="Memory 142"></div>
+        <div class="polaroid-caption">Memory 142</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo143.jpeg', 'Memory 143')">
+        <div class="polaroid-img-container"><img src="images/album1/photo143.jpeg" class="polaroid-img" alt="Memory 143"></div>
+        <div class="polaroid-caption">Memory 143</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo144.jpeg', 'Memory 144')">
+        <div class="polaroid-img-container"><img src="images/album1/photo144.jpeg" class="polaroid-img" alt="Memory 144"></div>
+        <div class="polaroid-caption">Memory 144</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo145.jpeg', 'Memory 145')">
+        <div class="polaroid-img-container"><img src="images/album1/photo145.jpeg" class="polaroid-img" alt="Memory 145"></div>
+        <div class="polaroid-caption">Memory 145</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo146.jpeg', 'Memory 146')">
+        <div class="polaroid-img-container"><img src="images/album1/photo146.jpeg" class="polaroid-img" alt="Memory 146"></div>
+        <div class="polaroid-caption">Memory 146</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo147.jpeg', 'Memory 147')">
+        <div class="polaroid-img-container"><img src="images/album1/photo147.jpeg" class="polaroid-img" alt="Memory 147"></div>
+        <div class="polaroid-caption">Memory 147</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo148.jpeg', 'Memory 148')">
+        <div class="polaroid-img-container"><img src="images/album1/photo148.jpeg" class="polaroid-img" alt="Memory 148"></div>
+        <div class="polaroid-caption">Memory 148</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo149.jpeg', 'Memory 149')">
+        <div class="polaroid-img-container"><img src="images/album1/photo149.jpeg" class="polaroid-img" alt="Memory 149"></div>
+        <div class="polaroid-caption">Memory 149</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo150.jpeg', 'Memory 150')">
+        <div class="polaroid-img-container"><img src="images/album1/photo150.jpeg" class="polaroid-img" alt="Memory 150"></div>
+        <div class="polaroid-caption">Memory 150</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo151.jpeg', 'Memory 151')">
+        <div class="polaroid-img-container"><img src="images/album1/photo151.jpeg" class="polaroid-img" alt="Memory 151"></div>
+        <div class="polaroid-caption">Memory 151</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo152.jpeg', 'Memory 152')">
+        <div class="polaroid-img-container"><img src="images/album1/photo152.jpeg" class="polaroid-img" alt="Memory 152"></div>
+        <div class="polaroid-caption">Memory 152</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo153.jpeg', 'Memory 153')">
+        <div class="polaroid-img-container"><img src="images/album1/photo153.jpeg" class="polaroid-img" alt="Memory 153"></div>
+        <div class="polaroid-caption">Memory 153</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo154.jpeg', 'Memory 154')">
+        <div class="polaroid-img-container"><img src="images/album1/photo154.jpeg" class="polaroid-img" alt="Memory 154"></div>
+        <div class="polaroid-caption">Memory 154</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo155.jpeg', 'Memory 155')">
+        <div class="polaroid-img-container"><img src="images/album1/photo155.jpeg" class="polaroid-img" alt="Memory 155"></div>
+        <div class="polaroid-caption">Memory 155</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo156.jpeg', 'Memory 156')">
+        <div class="polaroid-img-container"><img src="images/album1/photo156.jpeg" class="polaroid-img" alt="Memory 156"></div>
+        <div class="polaroid-caption">Memory 156</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo157.jpeg', 'Memory 157')">
+        <div class="polaroid-img-container"><img src="images/album1/photo157.jpeg" class="polaroid-img" alt="Memory 157"></div>
+        <div class="polaroid-caption">Memory 157</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo158.jpeg', 'Memory 158')">
+        <div class="polaroid-img-container"><img src="images/album1/photo158.jpeg" class="polaroid-img" alt="Memory 158"></div>
+        <div class="polaroid-caption">Memory 158</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo159.jpeg', 'Memory 159')">
+        <div class="polaroid-img-container"><img src="images/album1/photo159.jpeg" class="polaroid-img" alt="Memory 159"></div>
+        <div class="polaroid-caption">Memory 159</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo160.jpeg', 'Memory 160')">
+        <div class="polaroid-img-container"><img src="images/album1/photo160.jpeg" class="polaroid-img" alt="Memory 160"></div>
+        <div class="polaroid-caption">Memory 160</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo161.jpeg', 'Memory 161')">
+        <div class="polaroid-img-container"><img src="images/album1/photo161.jpeg" class="polaroid-img" alt="Memory 161"></div>
+        <div class="polaroid-caption">Memory 161</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo162.jpeg', 'Memory 162')">
+        <div class="polaroid-img-container"><img src="images/album1/photo162.jpeg" class="polaroid-img" alt="Memory 162"></div>
+        <div class="polaroid-caption">Memory 162</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo163.jpeg', 'Memory 163')">
+        <div class="polaroid-img-container"><img src="images/album1/photo163.jpeg" class="polaroid-img" alt="Memory 163"></div>
+        <div class="polaroid-caption">Memory 163</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo164.jpeg', 'Memory 164')">
+        <div class="polaroid-img-container"><img src="images/album1/photo164.jpeg" class="polaroid-img" alt="Memory 164"></div>
+        <div class="polaroid-caption">Memory 164</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo165.jpeg', 'Memory 165')">
+        <div class="polaroid-img-container"><img src="images/album1/photo165.jpeg" class="polaroid-img" alt="Memory 165"></div>
+        <div class="polaroid-caption">Memory 165</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo166.jpeg', 'Memory 166')">
+        <div class="polaroid-img-container"><img src="images/album1/photo166.jpeg" class="polaroid-img" alt="Memory 166"></div>
+        <div class="polaroid-caption">Memory 166</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo167.jpeg', 'Memory 167')">
+        <div class="polaroid-img-container"><img src="images/album1/photo167.jpeg" class="polaroid-img" alt="Memory 167"></div>
+        <div class="polaroid-caption">Memory 167</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo168.jpeg', 'Memory 168')">
+        <div class="polaroid-img-container"><img src="images/album1/photo168.jpeg" class="polaroid-img" alt="Memory 168"></div>
+        <div class="polaroid-caption">Memory 168</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo169.jpeg', 'Memory 169')">
+        <div class="polaroid-img-container"><img src="images/album1/photo169.jpeg" class="polaroid-img" alt="Memory 169"></div>
+        <div class="polaroid-caption">Memory 169</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo170.jpeg', 'Memory 170')">
+        <div class="polaroid-img-container"><img src="images/album1/photo170.jpeg" class="polaroid-img" alt="Memory 170"></div>
+        <div class="polaroid-caption">Memory 170</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo171.jpeg', 'Memory 171')">
+        <div class="polaroid-img-container"><img src="images/album1/photo171.jpeg" class="polaroid-img" alt="Memory 171"></div>
+        <div class="polaroid-caption">Memory 171</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo172.jpeg', 'Memory 172')">
+        <div class="polaroid-img-container"><img src="images/album1/photo172.jpeg" class="polaroid-img" alt="Memory 172"></div>
+        <div class="polaroid-caption">Memory 172</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo173.jpeg', 'Memory 173')">
+        <div class="polaroid-img-container"><img src="images/album1/photo173.jpeg" class="polaroid-img" alt="Memory 173"></div>
+        <div class="polaroid-caption">Memory 173</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo174.jpeg', 'Memory 174')">
+        <div class="polaroid-img-container"><img src="images/album1/photo174.jpeg" class="polaroid-img" alt="Memory 174"></div>
+        <div class="polaroid-caption">Memory 174</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo175.jpeg', 'Memory 175')">
+        <div class="polaroid-img-container"><img src="images/album1/photo175.jpeg" class="polaroid-img" alt="Memory 175"></div>
+        <div class="polaroid-caption">Memory 175</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo176.jpeg', 'Memory 176')">
+        <div class="polaroid-img-container"><img src="images/album1/photo176.jpeg" class="polaroid-img" alt="Memory 176"></div>
+        <div class="polaroid-caption">Memory 176</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo177.jpeg', 'Memory 177')">
+        <div class="polaroid-img-container"><img src="images/album1/photo177.jpeg" class="polaroid-img" alt="Memory 177"></div>
+        <div class="polaroid-caption">Memory 177</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo178.jpeg', 'Memory 178')">
+        <div class="polaroid-img-container"><img src="images/album1/photo178.jpeg" class="polaroid-img" alt="Memory 178"></div>
+        <div class="polaroid-caption">Memory 178</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo179.jpeg', 'Memory 179')">
+        <div class="polaroid-img-container"><img src="images/album1/photo179.jpeg" class="polaroid-img" alt="Memory 179"></div>
+        <div class="polaroid-caption">Memory 179</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo180.jpeg', 'Memory 180')">
+        <div class="polaroid-img-container"><img src="images/album1/photo180.jpeg" class="polaroid-img" alt="Memory 180"></div>
+        <div class="polaroid-caption">Memory 180</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo181.jpeg', 'Memory 181')">
+        <div class="polaroid-img-container"><img src="images/album1/photo181.jpeg" class="polaroid-img" alt="Memory 181"></div>
+        <div class="polaroid-caption">Memory 181</div>
+      </div>
+      <div class="polaroid-card" onclick="openLightbox('images/album1/photo182.jpeg', 'Memory 182')">
+        <div class="polaroid-img-container"><img src="images/album1/photo182.jpeg" class="polaroid-img" alt="Memory 182"></div>
+        <div class="polaroid-caption">Memory 182</div>
+      </div>
+    </div>
+
+    <!-- BACK TO LETTER BUTTON SA PINAKABABA -->
+    <div class="footer-action">
+      <a href="letter.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Letter</a>
+    </div>
+  </div>
+
+  <!-- LIGHTBOX MODAL CONTAINER -->
+  <div class="lightbox" id="lightboxModal" onclick="closeLightbox()">
+    <div class="lightbox-content" onclick="event.stopPropagation()">
+      <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+      <img src="" class="lightbox-img" id="lightboxImg" alt="Enlarged Memory">
+      <div class="lightbox-caption" id="lightboxCaption"></div>
+    </div>
+  </div>
+
+  <script>
+    function openLightbox(imgSrc, captionText) {
+      const modal = document.getElementById('lightboxModal');
+      const img = document.getElementById('lightboxImg');
+      const caption = document.getElementById('lightboxCaption');
+
+      img.src = imgSrc;
+      caption.textContent = captionText;
+      modal.classList.add('active');
+    }
+
+    function closeLightbox() {
+      const modal = document.getElementById('lightboxModal');
+      modal.classList.remove('active');
+    }
+  </script>
+
+</body>
+</html>
