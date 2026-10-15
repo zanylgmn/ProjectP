@@ -3,11 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Album Two - Memories</title>
+  <title>Bon Voyage</title>
 
-  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Playfair+Display:ital,wght@0,600;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
@@ -65,7 +63,6 @@
       color: #d8b4fe;
     }
 
-    /* POLAROID GRID LAYOUT */
     .polaroid-grid {
       width: 100%;
       display: grid;
@@ -131,7 +128,6 @@
       line-height: 1;
     }
 
-    /* BACK TO LETTER BUTTON SA PINAKABABA */
     .footer-action {
       margin-top: 30px;
       display: flex;
@@ -163,7 +159,6 @@
       box-shadow: 0 15px 30px rgba(168, 85, 247, 0.3);
     }
 
-    /* LIGHTBOX MODAL */
     .lightbox {
       position: fixed;
       inset: 0;
@@ -230,21 +225,17 @@
   <div class="album-wrapper">
     <div class="album-header">
       <h1 class="album-title">2024</h1>
-      <p class="album-subtitle">Moments worth keeping</p>
+      <p class="album-subtitle">Moments Worth Keeping</p>
     </div>
 
-    <!-- POLAROID GRID CONTAINER -->
     <div class="polaroid-grid" id="albumGrid">
-      <!-- JavaScript will populate 173 polaroids here automatically -->
     </div>
 
-    <!-- BACK TO LETTER BUTTON SA PINAKABABA -->
     <div class="footer-action">
       <a href="letter.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Letter</a>
     </div>
   </div>
 
-  <!-- LIGHTBOX MODAL CONTAINER -->
   <div class="lightbox" id="lightboxModal" onclick="closeLightbox()">
     <div class="lightbox-content" onclick="event.stopPropagation()">
       <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
@@ -254,7 +245,6 @@
   </div>
 
   <script>
-    // Automatically generate 173 polaroids for album2
     const gridContainer = document.getElementById('albumGrid');
     const totalPhotos = 104;
 
