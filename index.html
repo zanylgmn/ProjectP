@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bon Voyage!</title>
+  <title>Bon Voyage</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
 
@@ -36,7 +36,6 @@
       user-select: none;
     }
 
-    /* HEADER TEXT */
     .header-container {
       text-align: center;
       margin-bottom: 20px;
@@ -44,14 +43,12 @@
     }
 
     .mail-title {
-      /* responsive title */
       font-size: clamp(1.4rem, 4.2vw, 2.8rem);
       font-weight: 600;
       letter-spacing: 0.5px;
       color: #f3e8ff;
     }
 
-    /* ENVELOPE CONTAINER (responsive) */
     .envelope-container {
       position: relative;
       width: min(520px, 92vw);
@@ -87,7 +84,6 @@
       border-bottom-left-radius: 14px; border-bottom-right-radius: 14px; z-index: 1;
     }
 
-    /* Use percentages for side flaps so they scale */
     .flap-left, .flap-right {
       position: absolute; top: 0; width: 50%; height: 100%; background: linear-gradient(90deg, rgba(75,45,98,0.95), rgba(42,19,61,0.9)); z-index: 0;
     }
@@ -107,7 +103,6 @@
 
     .instruction { margin-top: 20px; font-size: clamp(0.9rem, 2.8vw, 1.1rem); font-style: italic; color: #b8a7d1; }
 
-    /* Butterfly overlay - covers viewport */
     #butterfly-overlay { position: fixed; inset: 0; pointer-events: none; z-index: 9999; overflow: visible; }
 
     .bf-transition-item { position: absolute; transform-style: preserve-3d; will-change: transform, opacity; animation: continuousFly var(--fly-duration, 2.2s) cubic-bezier(0.25,1,0.5,1) forwards; }
@@ -123,20 +118,17 @@
       100% { opacity: 1; transform: translate(var(--target-x), var(--target-y)) scale(var(--final-scale)) rotate(var(--target-r)); }
     }
 
-    /* Accessibility: reduce motion */
     @media (prefers-reduced-motion: reduce) {
       .bf-transition-item, .envelope-container, .wax-seal { animation: none !important; transition: none !important; }
       .bf-wing { animation: none !important; }
     }
 
-    /* Smaller device tweaks */
     @media (max-width: 480px) {
       .envelope-container { height: clamp(200px, 52vw, 280px); }
       .mail-title { margin-bottom: 6px; }
       .instruction { margin-top: 14px; }
     }
 
-    /* Ensure enough vertical space when content grows */
     @media (max-height: 500px) {
       body { justify-content: flex-start; padding-top: 18px; padding-bottom: 40px; }
     }
@@ -199,14 +191,11 @@
       const startX = rect.left + rect.width / 2;
       const startY = rect.top + rect.height / 2;
 
-      // Determine device to limit the number of butterflies on small/mobile devices
       const isTouch = (navigator.maxTouchPoints || ('ontouchstart' in window)) > 0;
       const isIPhone = /iPhone/.test(navigator.userAgent) && !window.MSStream;
 
-      // Choose a conservative count on mobile/iPhone to avoid freezes
       const baseCount = isIPhone ? 30 : (isTouch ? 80 : 500);
 
-      // Throttle spawn so they don't all get appended in the same frame
       const spawnInterval = Math.max(6, Math.floor(1200 / Math.max(8, baseCount)));
 
       for (let i = 0; i < baseCount; i++) {
@@ -233,16 +222,13 @@
           bf3d.appendChild(rightWing);
           wrapper.appendChild(bf3d);
 
-          // scale wing size to viewport so it looks appropriate on all devices
           const wingSize = (Math.max(window.innerWidth, window.innerHeight) / 100) * (Math.random() * 2 + 2); // responsive px
           wrapper.style.setProperty('--wing-size', Math.max(18, Math.round(wingSize)) + 'px');
           wrapper.style.setProperty('--glow-color', palette.glow);
 
-          // start position (seal center)
           wrapper.style.left = startX + 'px';
           wrapper.style.top = startY + 'px';
 
-          // trajectory scaled to screen size
           const angle = Math.random() * Math.PI * 2;
           const distance = Math.max(window.innerWidth, window.innerHeight) * (0.9 + Math.random() * 0.9);
 
@@ -251,20 +237,17 @@
           wrapper.style.setProperty('--target-r', (Math.random() - 0.5) * 540 + 'deg');
           wrapper.style.setProperty('--final-scale', (Math.random() * 1.2 + 0.9).toFixed(2));
 
-          // slightly randomize duration to keep it lively
           const flyDuration = isIPhone ? 900 : (isTouch ? 1200 : 2200);
           wrapper.style.setProperty('--fly-duration', flyDuration + 'ms');
           wrapper.style.setProperty('--flap-speed', (0.08 + Math.random() * 0.12) + 's');
 
           overlay.appendChild(wrapper);
 
-          // cleanup after animation finishes to avoid DOM bloat
           setTimeout(() => { try { wrapper.remove(); } catch (err) {} }, flyDuration + 800);
 
         }, i * spawnInterval);
       }
 
-      // Navigate after a conservative delay
       const finalDelay = isIPhone ? 1100 : 2000;
       setTimeout(() => { window.location.href = 'greetings.html'; }, finalDelay);
     }
@@ -272,9 +255,7 @@
     const envelopeEl = document.getElementById('envelope');
     const sealEl = document.getElementById('waxSeal');
 
-    // Add pointer events for better cross-device handling (keeps existing click behavior too)
     function onPointer(e) {
-      // prevent double firing on some devices
       e.preventDefault && e.preventDefault();
       triggerTransitionEffect(e);
     }
@@ -284,11 +265,9 @@
       envelopeEl.addEventListener('pointerdown', onPointer, { passive: false });
     }
 
-    // keep click as a fallback
     sealEl.addEventListener('click', triggerTransitionEffect);
     envelopeEl.addEventListener('click', triggerTransitionEffect);
 
-    // If the user prefers reduced motion, skip heavy animation and redirect immediately
     if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       sealEl.removeEventListener && sealEl.removeEventListener('pointerdown', onPointer);
       envelopeEl.removeEventListener && envelopeEl.removeEventListener('pointerdown', onPointer);
